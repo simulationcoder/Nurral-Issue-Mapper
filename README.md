@@ -2,7 +2,64 @@
 
 Reads a GitHub repository's issues as a graph: which issue belongs to which epic,
 what blocks what, which pull request is really finishing which issue, and what is
-actually left. One Go binary; a terminal report and an interactive page.
+actually left. One program: a terminal report and an interactive page.
+
+![The Issue Mapper page: an epic's issues by status, blockers and pull requests](docs/screenshot.png)
+
+*An invented tracker (`--demo`), not a real project.*
+
+## Try it first (no token, no repo)
+
+```sh
+docker run --rm -p 127.0.0.1:8080:8080 ghcr.io/simulationcoder/nurral-issue-mapper --demo serve --addr 0.0.0.0:8080
+```
+
+Open http://127.0.0.1:8080. It shows an invented tracker, so you can click around
+before connecting anything. (With a downloaded binary: `issue-mapper --demo serve`.)
+
+## Quick start for your own repo
+
+**1. Create a token** that can read the repo's issues, at
+https://github.com/settings/tokens:
+
+- *Public repo:* any token works, even with no scopes.
+- *Private repo:* a classic token with the `repo` scope, or a fine-grained token on
+  that repo with read access to **Issues**, **Pull requests** and **Metadata**.
+
+(With the downloaded binary you can skip this if you are logged in with the `gh` CLI: the program uses its login.)
+
+**2. Run it.** With Docker, one command:
+
+```sh
+docker run --rm -p 127.0.0.1:8080:8080 \
+  -e GITHUB_TOKEN=<your token> \
+  -e ISSUE_MAPPER_REPO=your-org/your-repo \
+  ghcr.io/simulationcoder/nurral-issue-mapper
+```
+
+Or with a downloaded binary (see Install below):
+
+```sh
+export GITHUB_TOKEN=<your token>
+issue-mapper --repo your-org/your-repo serve
+```
+
+**3. Open http://127.0.0.1:8080.** Pick an epic on the left, click a card for its
+details, press **Timeline** to replay how the tracker grew.
+
+**4. Or stay in the terminal:**
+
+```sh
+issue-mapper --repo your-org/your-repo            # stats and the live epics
+issue-mapper --repo your-org/your-repo merged-open
+```
+
+Inside a clone of your repo you can leave out `--repo`. With Docker, put the command
+after the image name instead: `... ghcr.io/simulationcoder/nurral-issue-mapper merged-open`.
+
+> The page has no login. Publish the port to `127.0.0.1` as above, not `0.0.0.0`,
+> unless you put your own access control in front of it: it shows your private issues
+> to anyone who can reach it. `serve` warns when it is bound beyond loopback.
 
 ## Why
 
@@ -22,54 +79,27 @@ three, builds one tree, and gives every issue one status:
 A pull request that only *mentions* an issue never marks it merged. Only a PR GitHub
 links as closing it does.
 
-## Quick start (Docker, one command)
+## Install
 
-You need Docker and a GitHub token that can read your repo's issues (see "Token"
-below). Then:
+**Download a binary** (Linux, macOS, Windows) from the
+[Releases](https://github.com/simulationcoder/Nurral-Issue-Mapper/releases) page,
+unpack it and put `issue-mapper` on your `PATH`. Check it with
+`sha256sum -c checksums.txt`.
 
-```sh
-docker run --rm -p 127.0.0.1:8080:8080 \
-  -e GITHUB_TOKEN=<your token> \
-  -e ISSUE_MAPPER_REPO=your-org/your-repo \
-  ghcr.io/simulationcoder/nurral-issue-mapper
-```
+**Docker:** `docker pull ghcr.io/simulationcoder/nurral-issue-mapper`.
 
-Open http://127.0.0.1:8080. That is the whole setup: no Go, no Node, no clone.
-
-The same image runs the terminal reports; pass the command instead of the page:
-
-```sh
-docker run --rm -e GITHUB_TOKEN -e ISSUE_MAPPER_REPO=your-org/your-repo \
-  ghcr.io/simulationcoder/nurral-issue-mapper merged-open
-```
-
-If you are logged in with the `gh` CLI, `-e GITHUB_TOKEN=$(gh auth token)` saves
-creating a token (newer `gh` versions; older ones: `gh auth status --show-token`).
-
-> The page has no login. Publish the port to `127.0.0.1` as above, not `0.0.0.0`,
-> unless you put your own access control in front of it: it shows your private
-> issues to anyone who can reach it.
-
-### Token
-
-- **Public repo:** any token works, including one with no scopes.
-- **Private repo:** a classic token with the `repo` scope, or a fine-grained token on
-  that repo with read access to *Issues*, *Pull requests* and *Metadata*.
-
-Create one at https://github.com/settings/tokens.
-
-## Install without Docker
+**From source** (Go 1.25+, and Node 20+ only to build the page):
 
 ```sh
 git clone https://github.com/simulationcoder/nurral-issue-mapper
 cd nurral-issue-mapper
-make build            # needs Go 1.25+ and Node 20+ (Node only to build the page); writes bin/issue-mapper
+make build            # writes bin/issue-mapper
 ```
 
 ## Use
 
-It needs a GitHub token that can read the repo's issues: `GITHUB_TOKEN`, `GH_TOKEN`,
-or a logged-in `gh` CLI. Run it inside a clone, or pass `--repo owner/name`.
+Needs a GitHub token (`GITHUB_TOKEN`, `GH_TOKEN` or a logged-in `gh`). Run it inside a
+clone, or pass `--repo owner/name` (or set `ISSUE_MAPPER_REPO`).
 
 ```sh
 issue-mapper                    # stats and the live epics
@@ -80,6 +110,7 @@ issue-mapper merged-open        # finished work nobody closed
 issue-mapper orphans            # open issues nothing claims
 issue-mapper json               # the raw graph
 issue-mapper serve              # the interactive page on http://127.0.0.1:8080
+issue-mapper --demo             # any command on an invented tracker, no token needed
 ```
 
 `--refresh` re-reads GitHub; otherwise a result is reused for five minutes.

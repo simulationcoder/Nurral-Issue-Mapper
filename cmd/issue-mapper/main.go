@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"net"
 	"net/http"
 	"os"
 	"strconv"
@@ -18,6 +19,9 @@ import (
 	"github.com/simulationcoder/nurral-issue-mapper/internal/server"
 	"github.com/simulationcoder/nurral-issue-mapper/web"
 )
+
+// version is set at release time with -ldflags "-X main.version=...".
+var version = "dev"
 
 const usage = `issue-mapper reads a GitHub repo's issues as a graph.
 
@@ -39,6 +43,8 @@ Flags:
   --repo owner/name   default: $ISSUE_MAPPER_REPO, then .issue-mapper.yml, then the git origin remote
   --refresh           re-read GitHub instead of using the cache
   --config path       default: .issue-mapper.yml
+  --demo              use an invented tracker: no token, no network (try it first)
+  --version           print the version
 
 Needs a GitHub token: GITHUB_TOKEN, GH_TOKEN, or a logged-in gh CLI.
 `
@@ -56,8 +62,14 @@ func run(args []string) error {
 	repo := fs.String("repo", "", "owner/name")
 	refresh := fs.Bool("refresh", false, "re-read GitHub")
 	cfgPath := fs.String("config", ".issue-mapper.yml", "config file")
+	demo := fs.Bool("demo", false, "use an invented tracker")
+	showVersion := fs.Bool("version", false, "print the version")
 	if err := fs.Parse(args); err != nil {
 		return err
+	}
+	if *showVersion {
+		fmt.Println("issue-mapper", version)
+		return nil
 	}
 	rest := fs.Args()
 	cmd := "summary"
@@ -65,24 +77,30 @@ func run(args []string) error {
 		cmd, rest = rest[0], rest[1:]
 	}
 
-	file, err := config.Load(*cfgPath)
-	if err != nil {
-		return err
+	var svc *graph.Service
+	var name string
+	if *demo {
+		svc, name = graph.NewDemoService(), "acme/shop (demo)"
+	} else {
+		file, err := config.Load(*cfgPath)
+		if err != nil {
+			return err
+		}
+		rules, err := file.Rules()
+		if err != nil {
+			return err
+		}
+		name = firstNonEmpty(*repo, os.Getenv("ISSUE_MAPPER_REPO"), file.Repo, config.RepoFromGit())
+		if name == "" {
+			return fmt.Errorf("no repo: pass --repo owner/name, set ISSUE_MAPPER_REPO, put it in %s, or run inside a clone", *cfgPath)
+		}
+		token := config.Token()
+		if token == "" {
+			return graph.ErrNoToken
+		}
+		svc = graph.NewService(graph.FetchOptions{Repo: name, Token: token})
+		svc.Rules = rules
 	}
-	rules, err := file.Rules()
-	if err != nil {
-		return err
-	}
-	name := firstNonEmpty(*repo, os.Getenv("ISSUE_MAPPER_REPO"), file.Repo, config.RepoFromGit())
-	if name == "" {
-		return fmt.Errorf("no repo: pass --repo owner/name, set ISSUE_MAPPER_REPO, put it in %s, or run inside a clone", *cfgPath)
-	}
-	token := config.Token()
-	if token == "" {
-		return graph.ErrNoToken
-	}
-	svc := graph.NewService(graph.FetchOptions{Repo: name, Token: token})
-	svc.Rules = rules
 
 	if cmd == "serve" {
 		sf := flag.NewFlagSet("serve", flag.ContinueOnError)
@@ -90,6 +108,7 @@ func run(args []string) error {
 		if err := sf.Parse(rest); err != nil {
 			return err
 		}
+		warnIfExposed(*addr)
 		fmt.Printf("issue-mapper: %s on http://%s\n", name, *addr)
 		return (&http.Server{Addr: *addr, Handler: server.Handler(svc, web.Dist()), ReadHeaderTimeout: 10 * time.Second}).ListenAndServe()
 	}
@@ -143,4 +162,32 @@ func firstNonEmpty(vals ...string) string {
 		}
 	}
 	return ""
+}
+
+// warnIfExposed says so when the page, which has no login, is bound beyond
+// loopback. Inside Docker the container must bind all interfaces and the
+// published port decides exposure, so it stays quiet there.
+func warnIfExposed(addr string) {
+	if inDocker() || isLoopback(addr) {
+		return
+	}
+	fmt.Fprintf(os.Stderr, "issue-mapper: warning: %s is not a loopback address. The page has no login and shows every issue, private ones included, to anyone who can reach it.\n", addr)
+}
+
+func inDocker() bool {
+	_, err := os.Stat("/.dockerenv")
+	return err == nil
+}
+
+// isLoopback reports whether a listen address only accepts local connections.
+func isLoopback(addr string) bool {
+	host, _, err := net.SplitHostPort(addr)
+	if err != nil {
+		host = addr
+	}
+	if host == "localhost" {
+		return true
+	}
+	ip := net.ParseIP(host)
+	return ip != nil && ip.IsLoopback()
 }

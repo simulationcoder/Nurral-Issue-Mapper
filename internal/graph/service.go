@@ -16,6 +16,8 @@ type Service struct {
 	Fetch FetchOptions
 	Rules Rules
 
+	demo *Graph // set by NewDemoService
+
 	mu        sync.Mutex
 	response  *Graph
 	fetchedAt time.Time
@@ -28,6 +30,11 @@ func NewService(o FetchOptions) *Service {
 
 // Get returns the graph, from cache when it is fresh and force is false.
 func (s *Service) Get(ctx context.Context, force bool) (*Graph, error) {
+	if s.demo != nil {
+		out := *s.demo
+		out.FetchedAt = time.Now().UTC().Format(time.RFC3339)
+		return &out, nil
+	}
 	if s.Fetch.Token == "" {
 		return nil, ErrNoToken
 	}
