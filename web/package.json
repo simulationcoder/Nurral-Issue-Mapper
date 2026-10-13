@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc --noEmit && vite build",
+    "build": "tsc --noEmit && vite build && node -e \"import('node:fs').then(f=>f.writeFileSync('dist/.gitkeep',''))\"",
     "typecheck": "tsc --noEmit",
     "test": "vitest run"
   },
