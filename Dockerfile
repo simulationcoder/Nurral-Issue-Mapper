@@ -20,7 +20,7 @@ RUN apk add --no-cache ca-certificates && adduser -D -u 10001 mapper
 USER mapper
 COPY --from=bin /issue-mapper /usr/local/bin/issue-mapper
 EXPOSE 8080
-# Reads GITHUB_TOKEN and --repo from the environment; bind to all interfaces
-# inside the container and publish the port to loopback only.
+# Reads GITHUB_TOKEN and ISSUE_MAPPER_REPO from the environment. It binds to all
+# interfaces inside the container; publish the port to loopback only (-p 127.0.0.1:...).
 ENTRYPOINT ["issue-mapper"]
 CMD ["serve", "--addr", "0.0.0.0:8080"]

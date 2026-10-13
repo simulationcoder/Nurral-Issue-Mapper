@@ -22,12 +22,48 @@ three, builds one tree, and gives every issue one status:
 A pull request that only *mentions* an issue never marks it merged. Only a PR GitHub
 links as closing it does.
 
-## Install
+## Quick start (Docker, one command)
+
+You need Docker and a GitHub token that can read your repo's issues (see "Token"
+below). Then:
+
+```sh
+docker run --rm -p 127.0.0.1:8080:8080 \
+  -e GITHUB_TOKEN=<your token> \
+  -e ISSUE_MAPPER_REPO=your-org/your-repo \
+  ghcr.io/simulationcoder/nurral-issue-mapper
+```
+
+Open http://127.0.0.1:8080. That is the whole setup: no Go, no Node, no clone.
+
+The same image runs the terminal reports; pass the command instead of the page:
+
+```sh
+docker run --rm -e GITHUB_TOKEN -e ISSUE_MAPPER_REPO=your-org/your-repo \
+  ghcr.io/simulationcoder/nurral-issue-mapper merged-open
+```
+
+If you are logged in with the `gh` CLI, `-e GITHUB_TOKEN=$(gh auth token)` saves
+creating a token (newer `gh` versions; older ones: `gh auth status --show-token`).
+
+> The page has no login. Publish the port to `127.0.0.1` as above, not `0.0.0.0`,
+> unless you put your own access control in front of it: it shows your private
+> issues to anyone who can reach it.
+
+### Token
+
+- **Public repo:** any token works, including one with no scopes.
+- **Private repo:** a classic token with the `repo` scope, or a fine-grained token on
+  that repo with read access to *Issues*, *Pull requests* and *Metadata*.
+
+Create one at https://github.com/settings/tokens.
+
+## Install without Docker
 
 ```sh
 git clone https://github.com/simulationcoder/nurral-issue-mapper
 cd nurral-issue-mapper
-make build            # needs Go 1.25+ and Node 20+; writes bin/issue-mapper
+make build            # needs Go 1.25+ and Node 20+ (Node only to build the page); writes bin/issue-mapper
 ```
 
 ## Use

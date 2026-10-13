@@ -36,7 +36,7 @@ Commands:
   serve [--addr :8080]   the interactive page
 
 Flags:
-  --repo owner/name   default: .issue-mapper.yml, else the git origin remote
+  --repo owner/name   default: $ISSUE_MAPPER_REPO, then .issue-mapper.yml, then the git origin remote
   --refresh           re-read GitHub instead of using the cache
   --config path       default: .issue-mapper.yml
 
@@ -73,11 +73,15 @@ func run(args []string) error {
 	if err != nil {
 		return err
 	}
-	name := firstNonEmpty(*repo, file.Repo, config.RepoFromGit())
+	name := firstNonEmpty(*repo, os.Getenv("ISSUE_MAPPER_REPO"), file.Repo, config.RepoFromGit())
 	if name == "" {
-		return fmt.Errorf("no repo: pass --repo owner/name, set it in %s, or run inside a clone", *cfgPath)
+		return fmt.Errorf("no repo: pass --repo owner/name, set ISSUE_MAPPER_REPO, put it in %s, or run inside a clone", *cfgPath)
 	}
-	svc := graph.NewService(graph.FetchOptions{Repo: name, Token: config.Token()})
+	token := config.Token()
+	if token == "" {
+		return graph.ErrNoToken
+	}
+	svc := graph.NewService(graph.FetchOptions{Repo: name, Token: token})
 	svc.Rules = rules
 
 	if cmd == "serve" {
