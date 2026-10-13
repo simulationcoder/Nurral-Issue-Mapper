@@ -1,0 +1,400 @@
+{
+  "repo": "example/shop",
+  "fetched_at": "2026-03-06T09:00:00Z",
+  "cached": false,
+  "ttl_seconds": 300,
+  "nodes": [
+    {
+      "kind": "issue",
+      "number": 1,
+      "title": "Epic: Checkout rewrite",
+      "state": "open",
+      "state_reason": "",
+      "status": "in_progress",
+      "url": "https://github.com/x/y/issues/1",
+      "created_at": "2026-03-01T09:00:00Z",
+      "updated_at": "2026-03-01T09:00:00Z",
+      "closed_at": null,
+      "labels": [],
+      "is_epic": true,
+      "parent": null,
+      "children": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "descendants": {
+        "total": 6,
+        "done": 1,
+        "dropped": 1,
+        "open": 4
+      },
+      "pull_requests": [],
+      "excerpt": "Tracks the rewrite.",
+      "depth": 0
+    },
+    {
+      "kind": "issue",
+      "number": 2,
+      "title": "Cart totals",
+      "state": "closed",
+      "state_reason": "completed",
+      "status": "done",
+      "url": "https://github.com/x/y/issues/2",
+      "created_at": "2026-03-01T10:00:00Z",
+      "updated_at": "2026-03-01T10:00:00Z",
+      "closed_at": "2026-03-03T09:00:00Z",
+      "labels": [],
+      "is_epic": false,
+      "parent": 1,
+      "parent_kind": "part_of",
+      "children": [],
+      "descendants": {
+        "total": 0,
+        "done": 0,
+        "dropped": 0,
+        "open": 0
+      },
+      "pull_requests": [],
+      "excerpt": "Part of #1.",
+      "depth": 1
+    },
+    {
+      "kind": "issue",
+      "number": 3,
+      "title": "Payment form",
+      "state": "open",
+      "state_reason": "",
+      "status": "in_review",
+      "url": "https://github.com/x/y/issues/3",
+      "created_at": "2026-03-01T11:00:00Z",
+      "updated_at": "2026-03-01T11:00:00Z",
+      "closed_at": null,
+      "labels": [],
+      "is_epic": false,
+      "parent": 1,
+      "parent_kind": "part_of",
+      "children": [],
+      "descendants": {
+        "total": 0,
+        "done": 0,
+        "dropped": 0,
+        "open": 0
+      },
+      "pull_requests": [
+        {
+          "number": 20,
+          "state": "OPEN",
+          "closes": true
+        }
+      ],
+      "excerpt": "Part of #1.",
+      "depth": 1
+    },
+    {
+      "kind": "issue",
+      "number": 4,
+      "title": "Receipts",
+      "state": "open",
+      "state_reason": "",
+      "status": "merged_open",
+      "url": "https://github.com/x/y/issues/4",
+      "created_at": "2026-03-01T13:00:00Z",
+      "updated_at": "2026-03-01T13:00:00Z",
+      "closed_at": null,
+      "labels": [],
+      "is_epic": false,
+      "parent": 1,
+      "parent_kind": "part_of",
+      "children": [],
+      "descendants": {
+        "total": 0,
+        "done": 0,
+        "dropped": 0,
+        "open": 0
+      },
+      "pull_requests": [
+        {
+          "number": 21,
+          "state": "MERGED",
+          "closes": true
+        }
+      ],
+      "excerpt": "Part of #1.",
+      "depth": 1
+    },
+    {
+      "kind": "issue",
+      "number": 5,
+      "title": "Email templates",
+      "state": "open",
+      "state_reason": "",
+      "status": "open",
+      "url": "https://github.com/x/y/issues/5",
+      "created_at": "2026-03-01T15:00:00Z",
+      "updated_at": "2026-03-01T15:00:00Z",
+      "closed_at": null,
+      "labels": [],
+      "is_epic": false,
+      "parent": 1,
+      "parent_kind": "part_of",
+      "children": [],
+      "descendants": {
+        "total": 0,
+        "done": 0,
+        "dropped": 0,
+        "open": 0
+      },
+      "pull_requests": [
+        {
+          "number": 22,
+          "state": "MERGED",
+          "closes": false
+        }
+      ],
+      "excerpt": "Part of #1.",
+      "depth": 1
+    },
+    {
+      "kind": "issue",
+      "number": 6,
+      "title": "Tax rules",
+      "state": "open",
+      "state_reason": "",
+      "status": "blocked",
+      "url": "https://github.com/x/y/issues/6",
+      "created_at": "2026-03-01T17:00:00Z",
+      "updated_at": "2026-03-01T17:00:00Z",
+      "closed_at": null,
+      "labels": [],
+      "is_epic": false,
+      "parent": 1,
+      "parent_kind": "part_of",
+      "children": [],
+      "descendants": {
+        "total": 0,
+        "done": 0,
+        "dropped": 0,
+        "open": 0
+      },
+      "pull_requests": [],
+      "excerpt": "Part of #1. Blocked by #3.",
+      "depth": 1
+    },
+    {
+      "kind": "issue",
+      "number": 7,
+      "title": "Gift wrap",
+      "state": "closed",
+      "state_reason": "not_planned",
+      "status": "dropped",
+      "url": "https://github.com/x/y/issues/7",
+      "created_at": "2026-03-01T18:00:00Z",
+      "updated_at": "2026-03-01T18:00:00Z",
+      "closed_at": "2026-03-04T09:00:00Z",
+      "labels": [],
+      "is_epic": false,
+      "parent": 1,
+      "parent_kind": "part_of",
+      "children": [],
+      "descendants": {
+        "total": 0,
+        "done": 0,
+        "dropped": 0,
+        "open": 0
+      },
+      "pull_requests": [],
+      "excerpt": "Part of #1.",
+      "depth": 1
+    },
+    {
+      "kind": "issue",
+      "number": 8,
+      "title": "Typo on the help page",
+      "state": "open",
+      "state_reason": "",
+      "status": "open",
+      "url": "https://github.com/x/y/issues/8",
+      "created_at": "2026-03-01T19:00:00Z",
+      "updated_at": "2026-03-01T19:00:00Z",
+      "closed_at": null,
+      "labels": [],
+      "is_epic": false,
+      "parent": null,
+      "children": [],
+      "descendants": {
+        "total": 0,
+        "done": 0,
+        "dropped": 0,
+        "open": 0
+      },
+      "pull_requests": [],
+      "excerpt": "Standalone.",
+      "depth": 0
+    },
+    {
+      "kind": "pr",
+      "number": 20,
+      "title": "",
+      "state": "open",
+      "state_reason": "",
+      "status": "pr_open",
+      "url": "",
+      "created_at": "2026-03-01T12:00:00Z",
+      "updated_at": "2026-03-01T12:00:00Z",
+      "closed_at": null,
+      "labels": [],
+      "is_epic": false,
+      "parent": null,
+      "children": [],
+      "descendants": {
+        "total": 0,
+        "done": 0,
+        "dropped": 0,
+        "open": 0
+      },
+      "pull_requests": [],
+      "issues": [
+        3
+      ],
+      "excerpt": "",
+      "depth": 0
+    },
+    {
+      "kind": "pr",
+      "number": 21,
+      "title": "",
+      "state": "closed",
+      "state_reason": "",
+      "status": "pr_merged",
+      "url": "",
+      "created_at": "2026-03-01T14:00:00Z",
+      "updated_at": "2026-03-02T15:00:00Z",
+      "closed_at": "2026-03-02T15:00:00Z",
+      "labels": [],
+      "is_epic": false,
+      "parent": null,
+      "children": [],
+      "descendants": {
+        "total": 0,
+        "done": 0,
+        "dropped": 0,
+        "open": 0
+      },
+      "pull_requests": [],
+      "issues": [
+        4
+      ],
+      "excerpt": "",
+      "depth": 0
+    },
+    {
+      "kind": "pr",
+      "number": 22,
+      "title": "",
+      "state": "closed",
+      "state_reason": "",
+      "status": "pr_merged",
+      "url": "",
+      "created_at": "2026-03-02T09:00:00Z",
+      "updated_at": "2026-03-03T09:00:00Z",
+      "closed_at": "2026-03-03T09:00:00Z",
+      "labels": [],
+      "is_epic": false,
+      "parent": null,
+      "children": [],
+      "descendants": {
+        "total": 0,
+        "done": 0,
+        "dropped": 0,
+        "open": 0
+      },
+      "pull_requests": [],
+      "issues": [
+        5
+      ],
+      "excerpt": "",
+      "depth": 0
+    }
+  ],
+  "edges": [
+    {
+      "from": 2,
+      "to": 1,
+      "kind": "part_of",
+      "primary": true
+    },
+    {
+      "from": 3,
+      "to": 1,
+      "kind": "part_of",
+      "primary": true
+    },
+    {
+      "from": 4,
+      "to": 1,
+      "kind": "part_of",
+      "primary": true
+    },
+    {
+      "from": 5,
+      "to": 1,
+      "kind": "part_of",
+      "primary": true
+    },
+    {
+      "from": 6,
+      "to": 1,
+      "kind": "part_of",
+      "primary": true
+    },
+    {
+      "from": 6,
+      "to": 3,
+      "kind": "depends_on"
+    },
+    {
+      "from": 7,
+      "to": 1,
+      "kind": "part_of",
+      "primary": true
+    },
+    {
+      "from": 20,
+      "to": 3,
+      "kind": "closes"
+    },
+    {
+      "from": 21,
+      "to": 4,
+      "kind": "closes"
+    },
+    {
+      "from": 22,
+      "to": 5,
+      "kind": "references"
+    }
+  ],
+  "roots": [
+    1
+  ],
+  "orphans": [
+    8
+  ],
+  "stats": {
+    "open": 6,
+    "closed": 2,
+    "done": 1,
+    "dropped": 1,
+    "blocked": 1,
+    "in_review": 1,
+    "merged_open": 1,
+    "epics": 1,
+    "orphans": 1,
+    "pull_requests": 3,
+    "open_pull_requests": 1
+  }
+}

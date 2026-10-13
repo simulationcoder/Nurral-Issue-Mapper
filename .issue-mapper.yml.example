@@ -1,0 +1,12 @@
+# Copy to .issue-mapper.yml. Every key is optional.
+
+# owner/name. Default: the git origin remote of the current directory.
+repo: owner/name
+
+# An issue whose title matches is treated as an epic.
+# Default: any title containing the word "epic".
+epic_title: '(?i)(^|\W)epic(\W|$)'
+
+# Numbered series, "Checkout 3/8: payment form". Three capture groups:
+# the series label, the position and the total.
+series_title: '^(.*?)\s*\b(\d{1,2})\s*/\s*(\d{1,2})\b\s*[:\-–—]'
